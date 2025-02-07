@@ -4,3 +4,7 @@ __pycache__/
 *.log
 venv/
 node_modules/
+.conda/
+.condarc
+.conda_envs/
+.conda_lock/
