@@ -37,4 +37,5 @@ jobs:  # Defines the series of tasks the workflow will execute
           AZURE_OPENAI_ENDPOINT: ${{ vars.AZURE_OPENAI_ENDPOINT }}
           OPENAI_API_VERSION: ${{ vars.OPENAI_API_VERSION }}
         run: |
-          python -m uvicorn server:app --reload
+          nohup python -m uvicorn server:app --host 0.0.0.0 --port 8000 &
+          sleep 5  # Allow server some time to start
