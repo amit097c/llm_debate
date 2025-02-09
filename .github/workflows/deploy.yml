@@ -1,0 +1,39 @@
+name: Deploy with Environments
+
+# Trigger events - specifies when this workflow should run
+on:
+  push:      # the workflow runs whenever a push is made to the specified branch               
+    branches:
+      -main
+
+jobs: # defines the series of task the workflow will execute
+  deploy:  # name of this job
+    runs-on: ubuntu-latest
+    
+    steps:  #steps to execute within the job
+      - name: Checkout Code
+        uses: actions/checkout@v3 #uses->speficies a reusable action from the github actions marketplace, (actions/checkout@v3) a github action that clones the repo into the runner
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Install dependencies
+        run:  |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Run Application
+        env:
+          #senstive information: Github Secrets
+          OPENAI_API_KEY: ${{secrets.OPENAI_API_KEY}}
+          NEW_API_KEY:  ${{secrets.NEW_API_URL}}
+          OPENAI_API_DEPLOYMENT:  ${{}}
+          
+          #non senseitive information: Github Environment variables
+          OPEN_API_DEPLOYMENT:  ${{vars.OPENAI_API_DEPLOYMENT}}
+          OPENAI_API_MODEL:  ${{vars.OPENAI_API_MODEL}}
+          AZURE_OPENAI_ENDPOINT:  ${{vars.AZURE_OPENAI_ENDPOINT}}
+          OPENAI_API_VERSION: ${{vars.OPENAI_API_VERSION}}
+        run:  |
+          python -m uvicorn server:app --reload
